@@ -65,7 +65,6 @@ ApplicationWindow {
         Rectangle {
             color: "white"
 
-            // No Back button on startup.
             ColumnLayout {
                 anchors.centerIn: parent
                 width: Math.min(parent.width - 80, 760)
@@ -94,7 +93,7 @@ ApplicationWindow {
                     text: "Start calibration"
                     onClicked: pages.replace(activeCalibrationPage)
                 }
-
+                //remove when we have real calibration setup
                 BlueButton {
                     text: "Skip for testing"
                     onClicked: pages.replace(homePage)
@@ -109,7 +108,6 @@ ApplicationWindow {
         Rectangle {
             color: "white"
 
-            // No Back, Test, or Recalibrate buttons here.
             ColumnLayout {
                 anchors.centerIn: parent
                 width: Math.min(parent.width - 80, 760)
@@ -136,8 +134,8 @@ ApplicationWindow {
                     text: "Start calibration"
 
                     onClicked: {
-                        // TODO: Call your real calibration function here:
-                        // calibrationController.beginCalibration()
+                        // TODO: Call the real calibration function here:
+                        // calibrationController.beginCalibration() for opencv
 
                         calibrationStatus.text =
                                 "Calibration hardware is not connected yet."
@@ -163,7 +161,6 @@ ApplicationWindow {
         Rectangle {
             color: "white"
 
-            // No Back button on Home.
             ColumnLayout {
                 anchors.centerIn: parent
                 width: Math.min(parent.width - 80, 700)
