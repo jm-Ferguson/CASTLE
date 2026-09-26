@@ -20,7 +20,7 @@ qt_add_executable(appcastle_app
 qt_add_qml_module(appcastle_app
     URI castle_app
     QML_FILES
-        Main.qml
+        qml/Main.qml
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
