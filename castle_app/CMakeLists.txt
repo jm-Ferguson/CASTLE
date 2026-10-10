@@ -7,6 +7,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(Qt6 REQUIRED COMPONENTS Quick)
 
 qt_standard_project_setup(REQUIRES 6.10)
+add_subdirectory(design/CASTLEui)
+add_subdirectory(design/CASTLEuiContent)
 
 # Content of downloaded design from Figma to Qt or similar
 if (EXISTS "${CMAKE_CURRENT_LIST_DIR}/importedcontent/CMakeLists.txt")
@@ -15,6 +17,12 @@ endif()
 
 qt_add_executable(appcastle_app
     main.cpp
+)
+qt_add_resources(appcastle_app "controls_config"
+    PREFIX "/"
+    BASE "design"
+    FILES
+        design/qtquickcontrols2.conf
 )
 
 qt_add_qml_module(appcastle_app
@@ -35,7 +43,10 @@ set_target_properties(appcastle_app PROPERTIES
 )
 
 target_link_libraries(appcastle_app
-    PRIVATE Qt6::Quick
+    PRIVATE
+        Qt6::Quick
+        CASTLEuiplugin
+        CASTLEuiContentplugin
 )
 
 install(TARGETS appcastle_app

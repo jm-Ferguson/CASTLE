@@ -1,0 +1,4 @@
+QQmlApplicationEngine failed to load component
+qrc:/qt/qml/castle_app/qml/Main.qml:11:5: Type MainMenu unavailable
+qrc:/qt/qml/CASTLEuiContent/MainMenu.ui.qml:13:1: module "QtQuick3D.Effects" is not installed
+qrc:/qt/qml/CASTLEuiContent/MainMenu.ui.qml:12:1: module "QtQuick.Studio.DesignEffects" is not installed

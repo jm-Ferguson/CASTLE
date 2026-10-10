@@ -1,0 +1,31 @@
+<RCC>
+    <qresource>
+        <file>CASTLEui.qmlproject</file>
+        <file>CASTLEui/Constants.qml</file>
+        <file>CASTLEui/EventListModel.qml</file>
+        <file>CASTLEui/EventListSimulator.qml</file>
+        <file>CASTLEui/qmldir</file>
+        <file>CASTLEuiContent/App.qml</file>
+        <file>CASTLEuiContent/fonts/Nunito/Nunito-Italic-VariableFont_wght.ttf</file>
+        <file>CASTLEuiContent/fonts/Nunito/Nunito-VariableFont_wght.ttf</file>
+        <file>CASTLEuiContent/fonts/Nunito/static/Nunito-Black.ttf</file>
+        <file>CASTLEuiContent/fonts/Nunito/static/Nunito-BlackItalic.ttf</file>
+        <file>CASTLEuiContent/fonts/Nunito/static/Nunito-Bold.ttf</file>
+        <file>CASTLEuiContent/fonts/Nunito/static/Nunito-BoldItalic.ttf</file>
+        <file>CASTLEuiContent/fonts/Nunito/static/Nunito-ExtraBold.ttf</file>
+        <file>CASTLEuiContent/fonts/Nunito/static/Nunito-ExtraBoldItalic.ttf</file>
+        <file>CASTLEuiContent/fonts/Nunito/static/Nunito-ExtraLight.ttf</file>
+        <file>CASTLEuiContent/fonts/Nunito/static/Nunito-ExtraLightItalic.ttf</file>
+        <file>CASTLEuiContent/fonts/Nunito/static/Nunito-Italic.ttf</file>
+        <file>CASTLEuiContent/fonts/Nunito/static/Nunito-Light.ttf</file>
+        <file>CASTLEuiContent/fonts/Nunito/static/Nunito-LightItalic.ttf</file>
+        <file>CASTLEuiContent/fonts/Nunito/static/Nunito-Medium.ttf</file>
+        <file>CASTLEuiContent/fonts/Nunito/static/Nunito-MediumItalic.ttf</file>
+        <file>CASTLEuiContent/fonts/Nunito/static/Nunito-Regular.ttf</file>
+        <file>CASTLEuiContent/fonts/Nunito/static/Nunito-SemiBold.ttf</file>
+        <file>CASTLEuiContent/fonts/Nunito/static/Nunito-SemiBoldItalic.ttf</file>
+        <file>CASTLEuiContent/MainMenu.ui.qml</file>
+        <file>CASTLEuiContent/Screen01.ui.qml</file>
+        <file>qtquickcontrols2.conf</file>
+    </qresource>
+</RCC>
