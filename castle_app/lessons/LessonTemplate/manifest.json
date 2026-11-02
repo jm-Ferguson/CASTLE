@@ -1,0 +1,25 @@
+
+{
+  "id": "org.castle.template",
+  "name": "Default Lesson",
+  "version": "1.0.0",
+  "description": "A template for creating new CASTLE lessons.",
+  "author": "CASTLE Development Team",
+
+  "icon": "icon.png",
+
+  "compatibility": {
+    "apiVersion": 1,
+    "platform": "linux",
+    "architecture": "x86_64"
+  },
+
+  "entrypoints": {
+    "logic": "lesson.so",
+    "interface": "LessonView.qml"
+  },
+
+  "inputs": [],
+
+  "settings": "config.json"
+}
