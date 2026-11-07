@@ -18,6 +18,7 @@ endif()
 qt_add_executable(appcastle_app
     main.cpp
     Sandbox.cpp
+    hardware/sensors/simulated/depth_camera.cpp
 )
 qt_add_resources(appcastle_app "controls_config"
     PREFIX "/"

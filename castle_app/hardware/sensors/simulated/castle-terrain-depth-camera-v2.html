@@ -1,0 +1,806 @@
+<!--
+AI Disclosure: This HTML terrain editor and were generated with assistance from OpenAI ChatGPT/Codex for the CASTLE
+capstone project. The exported data is simulated, not captured from a
+physical depth camera.
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+ <meta charset="utf-8"/>
+ <meta content="width=device-width,initial-scale=1" name="viewport"/>
+ <title>
+  CASTLE / Terrain Lab
+ </title>
+ <style>
+  
+    * {
+        box-sizing:border-box
+    }
+    body {
+        margin:0;
+        background:#101720;
+        color:#dae6eb;
+        font:14px system-ui
+    }
+    header {
+        height:88px;
+        padding:22px 30px;
+        border-bottom:1px solid #2a3541;
+        display:flex;
+        justify-content:space-between;
+        align-items:center
+    }
+    h1 {
+        font-size:23px;
+        letter-spacing:4px;
+        margin:0
+    }
+    small,.label {
+        color:#8398a7;
+        font:11px monospace;
+        letter-spacing:1.5px
+    }
+    header p {
+        margin:7px 0;
+        color:#8398a7;
+        font-size:12px
+    }
+    .badge {
+        color:#76d0b9;
+        border:1px solid #315c56;
+        padding:8px 12px;
+        font:11px monospace
+    }
+    main {
+        display:grid;
+        grid-template-columns:270px 1fr;
+        height:calc(100vh - 88px)
+    }
+    aside {
+        padding:25px 22px;
+        background:#141d27;
+        border-right:1px solid #2a3541;
+        overflow:auto
+    }
+    section {
+        margin-bottom:28px
+    }
+    .label {
+        display:block;
+        margin-bottom:13px
+    }
+    button {
+        border:1px solid #33414f;
+        background:#1c2834;
+        color:#c8d8e1;
+        border-radius:5px;
+        padding:11px;
+        cursor:pointer;
+        font:12px system-ui
+    }
+    button:hover {
+        border-color:#72cfb7
+    }
+    button.active {
+        background:#244a47;
+        border-color:#68cbb0;
+        color:#a0f4d9
+    }
+    .grid {
+        display:grid;
+        grid-template-columns:1fr 1fr;
+        gap:7px
+    }
+    label {
+        display:block;
+        font-size:12px;
+        color:#a2b3bf;
+        margin:18px 0 8px
+    }
+    output {
+        float:right;
+        color:#88ddc3;
+        font-family:monospace
+    }
+    input[type=range] {
+        width:100%;
+        accent-color:#78d9bc
+    }
+    input[type=checkbox] {
+        accent-color:#78d9bc
+    }
+    .apply {
+        width:100%;
+        background:#7edbbe;
+        color:#102b26;
+        font-weight:700;
+        border:0;
+        margin-top:12px
+    }
+    .secondary {
+        width:100%;
+        margin-top:8px
+    }
+    .view {
+        position:relative;
+        overflow:hidden;
+        background:radial-gradient(ellipse at 50% 50%,#1c2a35,#101720 75%)
+    }
+    canvas {
+        width:100%;
+        height:100%;
+        display:block;
+        touch-action:none
+    }
+    .viewtop {
+        position:absolute;
+        top:23px;
+        left:25px;
+        right:25px;
+        display:flex;
+        justify-content:space-between;
+        pointer-events:none
+    }
+    .viewtop strong {
+        font:12px monospace;
+        color:#9ac4c2
+    }
+    .toolbar {
+        position:absolute;
+        right:24px;
+        top:60px;
+        display:flex;
+        gap:6px
+    }
+    .legend {
+        position:absolute;
+        left:25px;
+        bottom:72px;
+        width:170px
+    }
+    .bar {
+        height:5px;
+        background:linear-gradient(90deg,#306b78,#79b8a2,#dfd68b);
+        margin:8px 0
+    }
+    .ends {
+        display:flex;
+        justify-content:space-between;
+        font:10px monospace;
+        color:#a3b3bf
+    }
+    footer {
+        position:absolute;
+        bottom:0;
+        left:0;
+        right:0;
+        padding:16px 25px;
+        background:#131c26;
+        border-top:1px solid #2a3541;
+        color:#8fa5b3;
+        font:11px monospace;
+        display:flex;
+        justify-content:space-between;
+        gap:12px
+    }
+    .toast {
+        position:absolute;
+        bottom:78px;
+        right:24px;
+        background:#244a47;
+        border:1px solid #69cbb0;
+        padding:15px;
+        max-width:310px;
+        display:none;
+        font-size:12px
+    }
+    .help {
+        font-size:11px;
+        line-height:1.8;
+        color:#8096a5
+    }
+    a {
+        color:#7edbbe
+    }
+    @media(max-width:750px) {
+        header {
+            padding:18px
+        }
+        h1 {
+            font-size:18px
+        }
+        main {
+            grid-template-columns:210px 1fr
+        }
+        aside {
+            padding:20px 14px
+        }
+        .badge {
+            display:none
+        }
+        footer {
+            font-size:9px
+        }
+        .toolbar {
+            top:65px;
+            right:10px
+        }
+        .viewtop {
+            left:12px;
+            right:12px
+        }
+        .viewtop small {
+            display:none
+        }
+    }
+  
+ </style>
+ <header>
+  <div>
+   <h1>
+    CASTLE
+    <span style="color:#607989">
+     /
+    </span>
+    TERRAIN LAB
+   </h1>
+   <p>
+    Simulated terrain workspace
+   </p>
+  </div>
+  <span class="badge">
+   ●   EDITOR PROTOTYPE · 01
+  </span>
+ </header>
+ <main>
+  <aside>
+   <section>
+    <span class="label">
+     01 / TERRAIN PRESET
+    </span>
+    <div class="grid" id="presets">
+     <button data-p="flat">
+      Flat
+     </button>
+     <button class="active" data-p="hills">
+      Hills
+     </button>
+     <button data-p="crater">
+      Crater
+     </button>
+     <button data-p="valley">
+      Valley
+     </button>
+    </div>
+   </section>
+   <section>
+    <span class="label">
+     02 / SCULPT TOOLS
+    </span>
+    <div class="grid" id="tools">
+     <button class="active" data-t="raise">
+      ↥   Raise
+     </button>
+     <button data-t="lower">
+      ↧   Lower
+     </button>
+     <button data-t="smooth">
+      ≈   Smooth
+     </button>
+     <button data-t="flatten">
+      ―   Flatten
+     </button>
+    </div>
+    <label>
+     Brush diameter
+     <output id="sizeout">
+      5.0 in
+     </output>
+    </label>
+    <input aria-label="Brush diameter" id="size" max="12" min="1" step=".5" type="range" value="5"/>
+    <label>
+     Brush strength
+     <output id="strengthout">
+      45%
+     </output>
+    </label>
+    <input aria-label="Brush strength" id="strength" max="100" min="5" type="range" value="45"/>
+    <p class="help">
+     Drag on terrain to sculpt.
+     <br/>
+     Flatten uses the height where a stroke begins.
+    </p>
+   </section>
+   <section>
+    <span class="label">
+     03 / VIEW OPTIONS
+    </span>
+    <label>
+     <input checked="" id="mesh" type="checkbox"/>
+     Show sample mesh
+    </label>
+    <button class="secondary" id="home">
+     Reset camera
+    </button>
+    <button class="secondary" id="undo">
+     Undo last edit
+    </button>
+    <button class="secondary" id="reset">
+     Reset terrain to flat
+    </button>
+   </section>
+   <section>
+    <span class="label">
+     04 / SIMULATED DEPTH CAMERA
+    </span>
+    <small>
+     Terrain: 81 × 47 samples · 42.67 × 24 inches
+    </small>
+    <label>Output width (pixels) <input id="depthWidth" type="number" min="2" max="1920" step="1" value="640"></label>
+    <label>Output height (pixels) <input id="depthHeight" type="number" min="2" max="1080" step="1" value="480"></label>
+    <label>Camera above zero plane (mm) <input id="cameraHeightMm" type="number" min="1" max="60000" value="1000"></label>
+    <label>Extra view margin per side (%) <input id="viewMargin" type="number" min="0" max="50" value="5"></label>
+    <p class="help">Ideal overhead depth image with equal physical pixel spacing. Pixels outside the box export as zero (unmodeled surroundings, not a simulated rim). Top row = back; left column = left. Depth is camera-axis distance in millimeters. This simulates an orthographic camera, without perspective, a physical rim, hands, or noise. Margin is illustrative; it does not validate rim-height coverage. Terrain has 81 × 47 editable nodes; exported detail is interpolated. The orbit view does not change the simulated camera.</p>
+    <button class="apply" id="apply">
+     Capture snapshot ↗
+    </button>
+    <button class="secondary" id="export">
+     Export depth-camera JSON
+    </button>
+    <p class="help">
+     Capture stores a snapshot in this browser. Export saves the same format for C++. Export again and reload the simulator after editing. No hardware is connected.
+    </p>
+   </section>
+  </aside>
+  <div class="view">
+   <canvas aria-label="Interactive three dimensional sandbox terrain" id="canvas">
+   </canvas>
+   <div class="viewtop">
+    <strong id="terrainlabel">
+     HILLS / UNSAVED TERRAIN
+    </strong>
+    <small>
+     3D WORLD MODEL · INCHES
+    </small>
+   </div>
+   <div class="toolbar">
+    <button class="active" id="sculpt">
+     Sculpt
+    </button>
+    <button id="orbit">
+     Orbit
+    </button>
+    <button id="pan">
+     Pan
+    </button>
+   </div>
+   <div class="legend">
+    <small>
+     ELEVATION / INCHES
+    </small>
+    <div class="bar">
+    </div>
+    <div class="ends">
+     <span id="min">
+      0.0
+     </span>
+     <span id="max">
+      6.0
+     </span>
+    </div>
+   </div>
+   <div class="toast" id="toast" role="status">
+   </div>
+   <footer>
+    <span>
+     Drag: active tool  ·  Right drag: orbit  ·  Shift drag: pan  ·  Scroll: zoom
+    </span>
+    <span id="stats">
+     3,807 SAMPLES
+    </span>
+   </footer>
+  </div>
+ </main>
+ <script>
+  
+    const BOX_WIDTH = 42.67, BOX_DEPTH = 24;
+    const NX = 81, NZ = 47, N = NX * NZ, $ = id=>document.getElementById(id), canvas = $('canvas'), ctx = canvas.getContext('2d');
+    let heights = new Float64Array(N), projected =[], triangles =[], tool = 'raise', mode = 'sculpt', preset = 'hills', yaw = - .32, pitch = .85, zoom = 1, panX = 0, panY = 0, drag = null, hover = null, history =[], dirty = true, applied = null;
+    function snapshot() {
+        history.push(heights.slice());
+        if(history.length > 30)history.shift()
+    }
+    function changed() {
+        dirty = true;
+        $('terrainlabel').textContent = preset.toUpperCase() + ' / UNSAVED TERRAIN'
+    }
+    function generate(p) {
+        snapshot();
+        preset = p;
+        for(let z = 0; z < NZ; z++)for(let x = 0; x < NX; x++) {
+            let a = x / (NX - 1) * BOX_WIDTH - BOX_WIDTH / 2, b = z / (NZ - 1) * BOX_DEPTH - BOX_DEPTH / 2, r = Math.hypot(a * .8, b);
+            heights[z * NX + x] = p === 'hills' ? 5.8 * Math.exp( -((a + 5) ** 2 / 24 +(b - 2) ** 2 / 13)) + 3.6 * Math.exp( -((a - 7) ** 2 / 18 +(b + 4) ** 2 / 10)) : p === 'crater' ? 4 * Math.exp( -(((r - 5) / 1.7) ** 2)) : p === 'valley' ? Math.max(0, 4 *(1 - Math.exp( -((b + .18 * a) ** 2) / 13))) *(.75 + .25 * Math.cos(a / 9)) : 0
+        }
+        document.querySelectorAll('[data-p]').forEach(b=>b.classList.toggle('active', b.dataset.p === p));
+        changed()
+    }
+    function project(x, y, z) {
+        let a = x * Math.cos(yaw) - z * Math.sin(yaw), b = x * Math.sin(yaw) + z * Math.cos(yaw);
+        let s = Math.min(canvas.clientWidth / 57, canvas.clientHeight / 42) * zoom;
+        return {
+            x : canvas.clientWidth / 2 + panX + a * s, y : canvas.clientHeight * .53 + panY +(b * Math.sin(pitch) - y * Math.cos(pitch)) * s, d : b * Math.cos(pitch) + y * Math.sin(pitch)
+        }
+    }
+    function render() {
+        if(!dirty)return;
+        dirty = false;
+        let w = canvas.clientWidth, h = canvas.clientHeight;
+        ctx.clearRect(0, 0, w, h);
+        ctx.lineWidth = .5;
+        ctx.strokeStyle = '#26333f';
+        for(let x = -32; x <= 32; x += 4) {
+            let a = project(x, -1, -20), b = project(x, -1, 20);
+            ctx.beginPath();
+            ctx.moveTo(a.x, a.y);
+            ctx.lineTo(b.x, b.y);
+            ctx.stroke()
+        }
+        for(let z = -20; z <= 20; z += 4) {
+            let a = project(-32, -1, z), b = project(32, -1, z);
+            ctx.beginPath();
+            ctx.moveTo(a.x, a.y);
+            ctx.lineTo(b.x, b.y);
+            ctx.stroke()
+        }
+        projected = Array.from(heights,(v, i)=>project((i % NX) / (NX - 1) * BOX_WIDTH - BOX_WIDTH / 2, v, Math.floor(i / NX) / (NZ - 1) * BOX_DEPTH - BOX_DEPTH / 2));
+        triangles =[];
+        let lo = Infinity, hi = - Infinity;
+        heights.forEach(v=> {
+            lo = Math.min(lo, v); hi = Math.max(hi, v)
+        }
+        );
+        for(let z = 0; z < NZ - 1; z++)for(let x = 0; x < NX - 1; x++) {
+            let a = z * NX + x;
+            for(let ids of[[a, a + NX, a + 1],[a + 1, a + NX, a + NX + 1]]) {
+                triangles.push( {
+                    ids, d : ids.reduce((s, i)=>s + projected[i].d, 0) / 3
+                }
+                )
+            }
+        }
+        triangles.sort((a, b)=>a.d - b.d);
+        for(let {
+            ids
+        }
+        of triangles) {
+            let v = ids.reduce((s, i)=>s + heights[i], 0) / 3, t = Math.max(0, Math.min(1,(v + 2) / 10)), shade = Math.max(.6, Math.min(1.15, .9 +(heights[ids[0]] - heights[ids[1]]) * .12));
+            ctx.fillStyle = `rgb(${(44 + 170 * t) * shade},${(108 + 99 * t) * shade},${(124 + 9 * t) * shade})`;
+            ctx.beginPath();
+            ids.forEach((i, j)=> {
+                let p = projected[i]; j ? ctx.lineTo(p.x, p.y) : ctx.moveTo(p.x, p.y)
+            }
+            );
+            ctx.closePath();
+            ctx.fill();
+            if($('mesh').checked) {
+                ctx.strokeStyle = 'rgba(10,33,40,.42)';
+                ctx.stroke()
+            }
+        }
+        let corners =[[-BOX_WIDTH/2, -BOX_DEPTH/2],[BOX_WIDTH/2, -BOX_DEPTH/2],[BOX_WIDTH/2, BOX_DEPTH/2],[-BOX_WIDTH/2, BOX_DEPTH/2]];
+        for(let j = 0; j < 4; j++) {
+            let a = corners[j], b = corners[(j + 1) % 4];
+            let p = project(...[a[0], - 1, a[1]]), q = project(b[0], - 1, b[1]);
+            ctx.strokeStyle = '#638a88';
+            ctx.lineWidth = 1.2;
+            ctx.beginPath();
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(q.x, q.y);
+            ctx.stroke()
+        }
+        if(hover !== null && mode === 'sculpt') {
+            let x = hover % NX / (NX - 1) * BOX_WIDTH - BOX_WIDTH / 2, z = Math.floor(hover / NX) / (NZ - 1) * BOX_DEPTH - BOX_DEPTH / 2, r = + $('size').value / 2;
+            ctx.strokeStyle = '#b6ffe1';
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            for(let i = 0; i <= 64; i++) {
+                let a = i / 64 * Math.PI * 2, xx = Math.max(-BOX_WIDTH/2, Math.min(BOX_WIDTH/2, x + r * Math.cos(a))), zz = Math.max(-BOX_DEPTH/2, Math.min(BOX_DEPTH/2, z + r * Math.sin(a))), ix = Math.round((xx + BOX_WIDTH/2) / BOX_WIDTH * (NX - 1)), iz = Math.round((zz + BOX_DEPTH/2) / BOX_DEPTH * (NZ - 1)), p = project(xx, heights[iz * NX + ix] + .05, zz);
+                i ? ctx.lineTo(p.x, p.y) : ctx.moveTo(p.x, p.y)
+            }
+            ctx.stroke()
+        }
+        $('min').textContent = lo.toFixed(1);
+        $('max').textContent = hi.toFixed(1);
+        $('stats').textContent = '3,807 SAMPLES · ' +(hi - lo).toFixed(2) + ' IN RELIEF'
+    }
+    function pick(px, py) {
+        for(let k = triangles.length - 1; k >= 0; k--) {
+            let ids = triangles[k].ids,[a, b, c] = ids.map(i=>projected[i]), den =(b.y - c.y) *(a.x - c.x) +(c.x - b.x) *(a.y - c.y);
+            if(Math.abs(den) < 1e-6)continue;
+            let u =((b.y - c.y) *(px - c.x) +(c.x - b.x) *(py - c.y)) / den, v =((c.y - a.y) *(px - c.x) +(a.x - c.x) *(py - c.y)) / den;
+            if(u >= 0 && v >= 0 && u + v <= 1) {
+                return ids.reduce((best, i)=>(projected[i].x - px) ** 2 +(projected[i].y - py) ** 2 <(projected[best].x - px) ** 2 +(projected[best].y - py) ** 2 ? i : best, ids[0])
+            }
+        }
+        return null
+    }
+    function brush(i, dt) {
+        let x = i % NX, z = Math.floor(i / NX), r = + $('size').value / 2, s = + $('strength').value / 100, old = heights.slice();
+        for(let iz = 0; iz < NZ; iz++)for(let ix = 0; ix < NX; ix++) {
+            let d = Math.hypot((ix - x) * BOX_WIDTH / (NX - 1),(iz - z) * BOX_DEPTH / (NZ - 1));
+            if(d > r)continue;
+            let n = iz * NX + ix, f =(1 -(d / r) ** 2) ** 2, amount = s * f * dt * 3;
+            if(tool === 'raise' || tool === 'lower')heights[n] = Math.max( - 4, Math.min(12, old[n] + amount *(tool === 'raise' ? 1 : - 1)));
+            else {
+                let target = drag.level;
+                if(tool === 'smooth') {
+                    let sum = 0, count = 0;
+                    for(let dz = - 1; dz <= 1; dz++)for(let dx = - 1; dx <= 1; dx++) {
+                        let xx = ix + dx, zz = iz + dz;
+                        if(xx >= 0 && xx < NX && zz >= 0 && zz < NZ) {
+                            sum += old[zz * NX + xx];
+                            count++
+                        }
+                    }
+                    target = sum / count
+                }
+                heights[n] = old[n] +(target - old[n]) * Math.min(1, amount * 4)
+            }
+        }
+        changed()
+    }
+    canvas.oncontextmenu = e=>e.preventDefault();
+    canvas.onpointerdown = e=> {
+        if(e.button !== 0 && e.button !== 2 && e.button !== 1)return;
+        let rect = canvas.getBoundingClientRect(), x = e.clientX - rect.left, y = e.clientY - rect.top, i = pick(x, y), m = e.shiftKey || e.button === 1 ? 'pan' : e.button === 2 ? 'orbit' : mode;
+        drag = {
+            x : e.clientX, y : e.clientY, mode : m, level : i === null ? 0 : heights[i]
+        }
+        ;
+        if(m === 'sculpt' && i !== null) {
+            snapshot();
+            hover = i;
+            brush(i, .04)
+        }
+        canvas.setPointerCapture(e.pointerId)
+    }
+    ;
+    canvas.onpointermove = e=> {
+        let rect = canvas.getBoundingClientRect();
+        hover = pick(e.clientX - rect.left, e.clientY - rect.top);
+        if(drag) {
+            let dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+            if(drag.mode === 'orbit') {
+                yaw += dx * .008;
+                pitch = Math.max(.18, Math.min(1.45, pitch + dy * .006))
+            }
+            if(drag.mode === 'pan') {
+                panX += dx;
+                panY += dy
+            }
+            drag.x = e.clientX;
+            drag.y = e.clientY
+        }
+        dirty = true
+    }
+    ;
+    canvas.onpointerup = canvas.onpointercancel =()=>drag = null;
+    canvas.onpointerleave =()=> {
+        if(!drag)hover = null;
+        dirty = true
+    }
+    ;
+    canvas.addEventListener('wheel', e=> {
+        e.preventDefault(); zoom = Math.max(.4, Math.min(3, zoom * Math.exp( - e.deltaY * .001))); dirty = true
+    }
+    , {
+        passive : false
+    }
+    );
+    for(let b of document.querySelectorAll('[data-p]'))b.onclick =()=>generate(b.dataset.p);
+    for(let b of document.querySelectorAll('[data-t]'))b.onclick =()=> {
+        tool = b.dataset.t;
+        document.querySelectorAll('[data-t]').forEach(v=>v.classList.toggle('active', v === b));
+        $('sculpt').click()
+    }
+    ;
+    for(let id of['sculpt', 'orbit', 'pan'])$(id).onclick =()=> {
+        mode = id;
+        for(let v of['sculpt', 'orbit', 'pan'])$(v).classList.toggle('active', v === id);
+        dirty = true
+    }
+    ;
+    $('size').oninput =()=> {
+        $('sizeout').value =( + $('size').value).toFixed(1) + ' in';
+        dirty = true
+    }
+    ;
+    $('strength').oninput =()=>$('strengthout').value = $('strength').value + '%';
+    $('mesh').onchange =()=>dirty = true;
+    $('home').onclick =()=> {
+        yaw = - .32;
+        pitch = .85;
+        zoom = 1;
+        panX = panY = 0;
+        dirty = true
+    }
+    ;
+    $('reset').onclick =()=>generate('flat');
+    $('undo').onclick =()=> {
+        if(history.length) {
+            heights = history.pop();
+            changed()
+        }
+    }
+    ;
+    function payload() {
+        const width = Number($('depthWidth').value);
+        const height = Number($('depthHeight').value);
+        const cameraHeightMm = Number($('cameraHeightMm').value);
+        const margin = Number($('viewMargin').value) / 100;
+        if (!Number.isInteger(width) || width < 2 || width > 1920 ||
+            !Number.isInteger(height) || height < 2 || height > 1080 ||
+            !Number.isFinite(cameraHeightMm) || cameraHeightMm <= 0 || cameraHeightMm > 60000 ||
+            !Number.isFinite(margin) || margin < 0 || margin > 0.5) {
+            throw new Error('Enter valid camera dimensions and height.');
+        }
+        // Fit the box within the frame without stretching its physical aspect ratio.
+        const mmPerPixel = Math.max(BOX_WIDTH * 25.4 * (1 + 2 * margin) / width,
+                                    BOX_DEPTH * 25.4 * (1 + 2 * margin) / height);
+        const boxPixelWidth = BOX_WIDTH * 25.4 / mmPerPixel;
+        const boxPixelHeight = BOX_DEPTH * 25.4 / mmPerPixel;
+        const left = (width - boxPixelWidth) / 2;
+        const top = (height - boxPixelHeight) / 2;
+        const depthMm = new Array(width * height).fill(0);
+        for (let row = 0; row < height; ++row) {
+            // Pixel centers outside the modeled inside opening remain invalid (zero).
+            const v = (row + 0.5 - top) / boxPixelHeight;
+            if (v < 0 || v > 1) continue;
+            const gz = v * (NZ - 1);
+            const z0 = Math.floor(gz), z1 = Math.min(z0 + 1, NZ - 1), tz = gz - z0;
+            for (let col = 0; col < width; ++col) {
+                const u = (col + 0.5 - left) / boxPixelWidth;
+                if (u < 0 || u > 1) continue;
+                const gx = u * (NX - 1);
+                const x0 = Math.floor(gx), x1 = Math.min(x0 + 1, NX - 1), tx = gx - x0;
+                const back = heights[z0 * NX + x0] * (1 - tx) + heights[z0 * NX + x1] * tx;
+                const front = heights[z1 * NX + x0] * (1 - tx) + heights[z1 * NX + x1] * tx;
+                const distance = cameraHeightMm - (back * (1 - tz) + front * tz) * 25.4;
+                const rounded = Math.round(distance);
+                if (!Number.isFinite(distance) || rounded < 1 || rounded > 65535) {
+                    throw new Error('Terrain is at/above the camera or outside the 16-bit depth range. Raise the camera or lower terrain.');
+                }
+                depthMm[row * width + col] = rounded;
+            }
+        }
+        return {
+            schema: 'castle.depth.v1', createdAt: new Date().toISOString(),
+            width, height, order: 'row-major', pixelOrigin: 'top-left',
+            columnDirection: 'left-to-right', rowDirection: 'back-to-front',
+            depthUnits: 'millimeters', depthMeaning: 'camera-z', invalidDepth: 0,
+            camera: { model: 'ideal-orthographic-overhead', heightAboveZeroPlaneMm: cameraHeightMm, mmPerPixel,
+                      viewWidthMm: width * mmPerPixel, viewDepthMm: height * mmPerPixel },
+            sandbox: { widthMm: BOX_WIDTH * 25.4, depthMm: BOX_DEPTH * 25.4,
+                       imageRegion: { left, top, width: boxPixelWidth, height: boxPixelHeight } },
+            simulation: { outsideBox: 'invalid-zero', marginPerSide: margin,
+                          terrainColumns: NX, terrainRows: NZ },
+            depthMm
+        };
+    }
+    function safePayload() {
+        try { return payload(); }
+        catch (error) { toast(error.message); return null; }
+    }
+    let timer;
+    function toast(t) {
+        $('toast').textContent = t;
+        $('toast').style.display = 'block';
+        clearTimeout(timer);
+        timer = setTimeout(()=>$('toast').style.display = 'none', 5500)
+    }
+    $('apply').onclick =()=> {
+        const snapshot = safePayload();
+        if (!snapshot) return;
+        applied = snapshot;
+        window.castleAppliedTerrain = applied;
+        try {
+            localStorage.setItem('castle.appliedTerrain', JSON.stringify(applied))
+        }
+        catch {
+        }
+        window.dispatchEvent( new CustomEvent('castle:terrain-applied', {
+            detail : applied
+        }
+        ));
+        $('terrainlabel').textContent = preset.toUpperCase() + ' / SNAPSHOT APPLIED';
+        toast('Depth snapshot captured: ' + applied.width + ' × ' + applied.height + ' pixels.')
+    }
+    ;
+    $('export').onclick =()=> {
+        const snapshot = safePayload();
+        if (!snapshot) return;
+        let blob = new Blob([JSON.stringify(snapshot)], {
+            type : 'application/json'
+        }
+        ), url = URL.createObjectURL(blob), a = document.createElement('a');
+        a.href = url;
+        a.download = 'castle-depth.json';
+        a.click();
+        setTimeout(()=>URL.revokeObjectURL(url), 1000);
+        toast('Depth matrix exported in millimeters: castle-depth.json')
+    }
+    ;
+    new ResizeObserver(()=> {
+        let d = devicePixelRatio || 1; canvas.width = canvas.clientWidth * d; canvas.height = canvas.clientHeight * d; ctx.setTransform(d, 0, 0, d, 0, 0); dirty = true
+    }
+    ).observe(canvas);
+    generate('hills');
+    history =[];
+    let last = performance.now();
+    function loop(now) {
+        let dt = Math.min(.05,(now - last) / 1000);
+        last = now;
+        if(drag ?.mode === 'sculpt' && hover !== null)brush(hover, dt);
+        render();
+        requestAnimationFrame(loop)
+    }
+    requestAnimationFrame(loop);
+  
+ </script>
+</html>
+<style>
+ 
+    @media(max-width:550px) {
+        header {
+            height:90px
+        }
+        h1 {
+            font-size:17px;
+            letter-spacing:2px
+        }
+        main {
+            display:flex;
+            flex-direction:column;
+            height:auto
+        }
+        .view {
+            order:-1;
+            height:480px;
+            flex-shrink:0
+        }
+        aside {
+            width:100%;
+            overflow:visible;
+            border-right:0;
+            display:grid;
+            grid-template-columns:1fr 1fr;
+            gap:18px;
+            padding:22px
+        }
+        aside section {
+            margin:0
+        }
+        .viewtop strong {
+            font-size:10px
+        }
+        .toolbar {
+            top:52px
+        }
+        footer {
+            font-size:9px;
+            padding:12px;
+            display:block
+        }
+        .legend {
+            bottom:85px;
+            width:130px
+        }
+        .viewtop {
+            top:20px
+        }
+        canvas {
+            height:100%
+        }
+    }
+  
+</style>
